@@ -5,13 +5,10 @@ fun main(args: Array<String>) {
     val count = args.get(3).toInt()
     val generator = MineBoardGenerator(height, width, mines)
 
-    val start = System.currentTimeMillis()
     for (i in 1..count) {
         val board = generator.generate()
         storeStats(board)
-        if (i % 10000 == 0) {
-            println("" + i + " " + (System.currentTimeMillis() - start) / 1000)
-        }
+        if (i % 10000 == 0) println(i)
     }
     logStatsSummary(height, width, mines, count)
 }

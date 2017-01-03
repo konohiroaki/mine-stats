@@ -1,46 +1,50 @@
 import java.io.File
 
-val threebv: MutableList<Int> = mutableListOf()
-val islands: MutableList<Int> = mutableListOf()
-val openings: MutableList<Int> = mutableListOf()
-val zero: MutableList<Int> = mutableListOf()
-val one: MutableList<Int> = mutableListOf()
-val two: MutableList<Int> = mutableListOf()
-val three: MutableList<Int> = mutableListOf()
-val four: MutableList<Int> = mutableListOf()
-val five: MutableList<Int> = mutableListOf()
-val six: MutableList<Int> = mutableListOf()
-val seven: MutableList<Int> = mutableListOf()
-val eight: MutableList<Int> = mutableListOf()
+val threebv: MutableMap<Int, Long> = mutableMapOf()
+val islands: MutableMap<Int, Long> = mutableMapOf()
+val openings: MutableMap<Int, Long> = mutableMapOf()
+var zero: Long = 0
+var one: Long = 0
+var two: Long = 0
+var three: Long = 0
+var four: Long = 0
+var five: Long = 0
+var six: Long = 0
+var seven: Long = 0
+var eight: Long = 0
 
 fun storeStats(board: Array<Array<Cell>>) {
-    threebv.add(count3bv(board))
-    islands.add(countIslands(board))
-    openings.add(countOpenings(board))
-    zero.add(countCellType(board, Cell.ZERO))
-    one.add(countCellType(board, Cell.ONE))
-    two.add(countCellType(board, Cell.TWO))
-    three.add(countCellType(board, Cell.THREE))
-    four.add(countCellType(board, Cell.FOUR))
-    five.add(countCellType(board, Cell.FIVE))
-    six.add(countCellType(board, Cell.SIX))
-    seven.add(countCellType(board, Cell.SEVEN))
-    eight.add(countCellType(board, Cell.EIGHT))
+    val threebvCount = count3bv(board)
+    val islandsCount = countIslands(board)
+    val openingsCount = countOpenings(board)
+    threebv.put(threebvCount, threebv.getOrElse(threebvCount, { 0 }) + 1)
+    islands.put(islandsCount, islands.getOrElse(islandsCount, { 0 }) + 1)
+    openings.put(openingsCount, openings.getOrElse(openingsCount, { 0 }) + 1)
+
+    zero += countCellType(board, Cell.ZERO)
+    one += countCellType(board, Cell.ONE)
+    two += countCellType(board, Cell.TWO)
+    three += countCellType(board, Cell.THREE)
+    four += countCellType(board, Cell.FOUR)
+    five += countCellType(board, Cell.FIVE)
+    six += countCellType(board, Cell.SIX)
+    seven += countCellType(board, Cell.SEVEN)
+    eight += countCellType(board, Cell.EIGHT)
 }
 
 fun logStatsSummary(height: Int, width: Int, mines: Int, count: Int) {
-    val threebvMap = threebv.groupBy { it }.mapValues { it.value.size }.toSortedMap()
-    val islandsMap = islands.groupBy { it }.mapValues { it.value.size }.toSortedMap()
-    val openingsMap = openings.groupBy { it }.mapValues { it.value.size }.toSortedMap()
-    val zeroOccurrence = zero.sum().toDouble() / count
-    val oneOccurrence = one.sum().toDouble() / count
-    val twoOccurrence = two.sum().toDouble() / count
-    val threeOccurrence = three.sum().toDouble() / count
-    val fourOccurrence = four.sum().toDouble() / count
-    val fiveOccurrence = five.sum().toDouble() / count
-    val sixOccurrence = six.sum().toDouble() / count
-    val sevenOccurrence = seven.sum().toDouble() / count
-    val eightOccurrence = eight.sum().toDouble() / count
+    val threebvMap = threebv.toSortedMap()
+    val islandsMap = islands.toSortedMap()
+    val openingsMap = openings.toSortedMap()
+    val zeroOccurrence = zero.toDouble() / count
+    val oneOccurrence = one.toDouble() / count
+    val twoOccurrence = two.toDouble() / count
+    val threeOccurrence = three.toDouble() / count
+    val fourOccurrence = four.toDouble() / count
+    val fiveOccurrence = five.toDouble() / count
+    val sixOccurrence = six.toDouble() / count
+    val sevenOccurrence = seven.toDouble() / count
+    val eightOccurrence = eight.toDouble() / count
 
     File("stats.csv").printWriter().use { out ->
         out.println("height:${height}, width:${width}, mines:${mines}, trial count:${count}")
